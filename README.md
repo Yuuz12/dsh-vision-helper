@@ -1,5 +1,7 @@
 # dsh-vision-helper
 
+English | [中文](README.zh.md)
+
 Deployment-level vision plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error screenshots, charts, general image description) through **any configurable multimodal model**, plus a settings-page UI in the Web app.
