@@ -1,4 +1,4 @@
-# vision-helper
+# dsh-vision-helper
 
 Deployment-level vision plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
@@ -9,7 +9,7 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 ## Features
 
 - **`vision_analyze` tool** — accepts a local image path or a `data:` URI, sends it to the configured multimodal model, returns the analysis text.
-- **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in `$DSH_HOME/vision-helper.json`); empty fields auto-select a multimodal model.
+- **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in `$DSH_HOME/dsh-vision-helper.json`); empty fields auto-select a multimodal model.
 - **Robustness** — strips invisible Unicode characters from pasted paths (U+202A etc.), guards images by longest edge (`maxEdge`, default 4096 px), dedupes streamed text, friendly error messages.
 - **Automatic invocation guidance** — injects a system-prompt section so agents call `vision_analyze` on their own when a task involves images.
 - **Durable & global** — host composition plugin: survives restarts, available to every session.
@@ -21,20 +21,20 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 
 ## Install
 
-1. Copy this `vision-helper` folder into `<profile>/node_modules/` (default profile: `$HOME/.dsh/profiles/web`), so the package lands at `<profile>/node_modules/vision-helper/`.
+1. Copy this `dsh-vision-helper` folder into `<profile>/node_modules/` (default profile: `$HOME/.dsh/profiles/web`), so the package lands at `<profile>/node_modules/dsh-vision-helper/`.
 2. Add the row to `<profile>/cordis.patch.yml`:
 
 ```yaml
 - insert:
-    - id: vision-helper
-      name: 'vision-helper'
+    - id: dsh-vision-helper
+      name: 'dsh-vision-helper'
 ```
 
 3. Restart `dsh web`. That's it — no dependencies to resolve, the module is self-contained.
 
 ## Configuration
 
-Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `$DSH_HOME/vision-helper.json` (beside `settings.yaml`):
+Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `$DSH_HOME/dsh-vision-helper.json` (beside `settings.yaml`):
 
 ```json
 {
@@ -57,4 +57,4 @@ Changes are read per use — no restart needed (the guidance section re-register
 
 ## Uninstall
 
-Remove the `vision-helper` row from `cordis.patch.yml`, delete the `<profile>/node_modules/vision-helper` folder and `$DSH_HOME/vision-helper.json`, then restart.
+Remove the `dsh-vision-helper` row from `cordis.patch.yml`, delete the `<profile>/node_modules/dsh-vision-helper` folder and `$DSH_HOME/dsh-vision-helper.json`, then restart.

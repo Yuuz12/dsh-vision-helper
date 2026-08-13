@@ -1,13 +1,13 @@
 /**
- * vision-helper — deployment-level vision plugin for DeepSeek Harness.
+ * dsh-vision-helper — deployment-level vision plugin for DeepSeek Harness.
  *
  * Zero-dependency by design: no imports, so installation is a plain folder
  * copy plus one cordis.patch.yml row. Configuration lives in
- * `$DSH_HOME/vision-helper.json` (beside settings.yaml), read per use and
+ * `$DSH_HOME/dsh-vision-helper.json` (beside settings.yaml), read per use and
  * writable through the same-origin endpoint the settings page uses.
  */
 
-export const name = 'vision-helper'
+export const name = 'dsh-vision-helper'
 
 export const inject = ['tools', 'systemPrompt', 'fs', 'llm', 'attachments', 'webServer']
 
@@ -108,11 +108,11 @@ const GUIDANCE_TEXTS = {
   force: '当任务涉及图片（用户提供图片路径或附件、要求 OCR/识别图片内容、理解图表/UI/报错截图、描述图像细节等）时，【必须】使用 vision_analyze 工具分析图片：禁止不调用该工具就直接回答图片内容，也禁止声称无法查看图片。如果用户提到图片但未给出可访问的本地路径或 data URI，先向用户询问图片路径，再调用该工具。',
 }
 
-/** $DSH_HOME/vision-helper.json — the user-owned config document beside settings.yaml. */
+/** $DSH_HOME/dsh-vision-helper.json — the user-owned config document beside settings.yaml. */
 function configPath() {
   const home = process.env.DSH_HOME
     || ((process.env.USERPROFILE || process.env.HOME || '.') + '/.dsh')
-  return home.replace(/\\/g, '/').replace(/\/+$/, '') + '/vision-helper.json'
+  return home.replace(/\\/g, '/').replace(/\/+$/, '') + '/dsh-vision-helper.json'
 }
 
 async function readConfig(ctx) {
@@ -199,7 +199,7 @@ export async function apply(ctx) {
   }
 
   // Same-origin config endpoint for the settings page. Reads/writes
-  // $DSH_HOME/vision-helper.json — the same document the tool consumes.
+  // $DSH_HOME/dsh-vision-helper.json — the same document the tool consumes.
   function sendJson(res, status, body) {
     const text = JSON.stringify(body)
     res.writeHead(status, { 'content-type': 'application/json; charset=utf-8' })
@@ -217,7 +217,7 @@ export async function apply(ctx) {
 
   ctx.webServer.register({
     kind: 'exact',
-    path: '/vision-helper/config',
+    path: '/dsh-vision-helper/config',
     handler: async (req, res) => {
       try {
         if (req.method === 'GET' || req.method === 'HEAD') {
@@ -274,7 +274,7 @@ export async function apply(ctx) {
 
   ctx.tools.register({
     name: 'vision_analyze',
-    description: '使用已配置的多模态视觉模型分析图片并返回文字结果。适用于识别图片内容与场景、读取截图/文档中的文字（OCR）、理解图表/UI/报错截图、描述图像细节。image 参数接受本地图片的绝对路径（推荐）或 data:image/...;base64,... 数据 URI；分析网络图片前请先用其他工具下载到本地。配置在 $DSH_HOME/vision-helper.json（与 settings.yaml 同级）：provider/model 留空自动选择多模态模型，maxEdge 限制最长边像素（默认 4096）。',
+    description: '使用已配置的多模态视觉模型分析图片并返回文字结果。适用于识别图片内容与场景、读取截图/文档中的文字（OCR）、理解图表/UI/报错截图、描述图像细节。image 参数接受本地图片的绝对路径（推荐）或 data:image/...;base64,... 数据 URI；分析网络图片前请先用其他工具下载到本地。配置在 $DSH_HOME/dsh-vision-helper.json（与 settings.yaml 同级）：provider/model 留空自动选择多模态模型，maxEdge 限制最长边像素（默认 4096）。',
     parameters: {
       type: 'object',
       properties: {

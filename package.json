@@ -1,5 +1,5 @@
 {
-  "name": "vision-helper",
+  "name": "dsh-vision-helper",
   "version": "0.3.0",
   "type": "module",
   "main": "index.js",
