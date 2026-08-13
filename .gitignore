@@ -1,0 +1,7 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local artifacts
+*.tgz

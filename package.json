@@ -1,0 +1,37 @@
+{
+  "name": "vision-helper",
+  "version": "0.3.0",
+  "type": "module",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": {
+      "default": "./lib/client.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "lib/client.js",
+    "README.md"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "vision",
+    "multimodal",
+    "ocr"
+  ],
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-connection"
+      ]
+    }
+  },
+  "description": "Deployment-level vision plugin for DeepSeek Harness: registers the vision_analyze tool backed by a configurable multimodal model, with a settings-page UI. Zero dependencies."
+}
