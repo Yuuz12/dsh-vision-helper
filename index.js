@@ -2,8 +2,9 @@
  * dsh-vision-helper — persistent vision plugin for DeepSeek Harness.
  *
  * Zero-dependency by design: no imports, so installation is a plain folder
- * copy plus one cordis.patch.yml row. Configuration lives in the plugin's own
- * folder (`dsh-vision-helper.json` next to this module), read per use and
+ * copy plus one cordis.patch.yml row. Configuration lives in the hosting
+ * profile directory (`$DSH_HOME/profiles/<name>/dsh-vision-helper.json`),
+ * read per use and
  * writable through the same-origin endpoint the settings page uses.
  */
 
@@ -109,9 +110,8 @@ const GUIDANCE_TEXTS = {
 }
 
 /**
- * The plugin's own directory, derived from import.meta.url (pure string ops,
- * no imports). The config document lives next to the module so uninstalling
- * the plugin folder leaves no residue.
+ * The module's own directory, derived from import.meta.url (pure string ops,
+ * no imports).
  */
 function pluginDir() {
   try {
@@ -131,8 +131,25 @@ function pluginDir() {
   return null
 }
 
-function configPath() {
+/**
+ * The hosting profile directory ($DSH_HOME/profiles/<name>), derived from the
+ * module path. The config document lives HERE, not in the plugin folder:
+ * pnpm-managed installs place package files in a content-addressed store that
+ * updates replace, while the profile directory is user-owned and stable.
+ */
+function profileDir() {
   const dir = pluginDir()
+  if (!dir) return null
+  const marker = '/profiles/'
+  const idx = dir.indexOf(marker)
+  if (idx === -1) return null
+  const rest = dir.slice(idx + marker.length)
+  const slash = rest.indexOf('/')
+  return slash === -1 ? dir : dir.slice(0, idx + marker.length + slash)
+}
+
+function configPath() {
+  const dir = profileDir() || pluginDir()
   if (dir) return dir + '/dsh-vision-helper.json'
   // Fallback for exotic loaders where import.meta.url is not a file URL.
   const home = process.env.DSH_HOME
@@ -224,7 +241,7 @@ export async function apply(ctx) {
   }
 
   // Same-origin config endpoint for the settings page. Reads/writes
-  // Plugin-dir dsh-vision-helper.json — the same document the tool consumes.
+  // Profile-dir dsh-vision-helper.json — the same document the tool consumes.
   function sendJson(res, status, body) {
     const text = JSON.stringify(body)
     res.writeHead(status, { 'content-type': 'application/json; charset=utf-8' })
@@ -299,7 +316,7 @@ export async function apply(ctx) {
 
   ctx.tools.register({
     name: 'vision_analyze',
-    description: '使用已配置的多模态视觉模型分析图片并返回文字结果。适用于识别图片内容与场景、读取截图/文档中的文字（OCR）、理解图表/UI/报错截图、描述图像细节。image 参数接受本地图片的绝对路径（推荐）或 data:image/...;base64,... 数据 URI；分析网络图片前请先用其他工具下载到本地。配置在插件目录下的 dsh-vision-helper.json：provider/model 留空自动选择多模态模型，maxEdge 限制最长边像素（默认 4096）。',
+    description: '使用已配置的多模态视觉模型分析图片并返回文字结果。适用于识别图片内容与场景、读取截图/文档中的文字（OCR）、理解图表/UI/报错截图、描述图像细节。image 参数接受本地图片的绝对路径（推荐）或 data:image/...;base64,... 数据 URI；分析网络图片前请先用其他工具下载到本地。配置在 profile 目录下的 dsh-vision-helper.json：provider/model 留空自动选择多模态模型，maxEdge 限制最长边像素（默认 4096）。',
     parameters: {
       type: 'object',
       properties: {

@@ -23,8 +23,25 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 
 ## Install
 
-1. Copy this `dsh-vision-helper` folder into `<profile>/node_modules/` (default profile: `$HOME/.dsh/profiles/web`), so the package lands at `<profile>/node_modules/dsh-vision-helper/`.
-2. Add the row to `<profile>/cordis.patch.yml`:
+The package is a DSH **bundle** (declares `dsh.bundle.patch`), so the standard install is:
+
+```bash
+# published package (after `npm publish`)
+npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
+
+# or a tarball you built locally / received (no registry needed)
+npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
+```
+
+The command initializes the profile on first use, runs pnpm, and activates the bundle layer automatically. Verify without booting:
+
+```bash
+npx @deepseek-ai/dsh --profile web --dump-config   # shows the dsh-vision-helper layer
+```
+
+Then restart `dsh web`.
+
+**Manual fallback** (any layout): copy this `dsh-vision-helper` folder into `<profile>/node_modules/` and add the row to `<profile>/cordis.patch.yml`:
 
 ```yaml
 - insert:
@@ -32,11 +49,11 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
       name: 'dsh-vision-helper'
 ```
 
-3. Restart `dsh web`. That's it — no dependencies to resolve, the module is self-contained.
+Either way the module is self-contained — zero dependencies to resolve.
 
 ## Configuration
 
-Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `<profile>/node_modules/dsh-vision-helper/dsh-vision-helper.json` — inside the plugin folder, so uninstalling the plugin removes it with no residue:
+Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `<profile>/dsh-vision-helper.json` — the hosting profile directory (`$DSH_HOME/profiles/web/`), user-owned and stable across plugin updates:
 
 ```json
 {
@@ -59,4 +76,4 @@ Changes are read per use — no restart needed (the guidance section re-register
 
 ## Uninstall
 
-Remove the `dsh-vision-helper` row from `cordis.patch.yml`, delete the `<profile>/node_modules/dsh-vision-helper` folder (which also removes the config file), then restart.
+`npx @deepseek-ai/dsh plugin --profile web remove dsh-vision-helper` removes the dependency and its bundle layer; then delete the config file `<profile>/dsh-vision-helper.json` and restart. For a manual install: remove the row from `cordis.patch.yml`, delete the `<profile>/node_modules/dsh-vision-helper` folder, then restart.

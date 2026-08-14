@@ -23,8 +23,25 @@
 
 ## 安装
 
-1. 将本 `dsh-vision-helper` 文件夹复制到 `<profile>/node_modules/`（默认 profile：`$HOME/.dsh/profiles/web`），使包落在 `<profile>/node_modules/dsh-vision-helper/`。
-2. 在 `<profile>/cordis.patch.yml` 中添加插件行：
+本包是 DSH **组合包**（声明了 `dsh.bundle.patch`），标准安装方式：
+
+```bash
+# 已发布到 npm 后
+npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
+
+# 或本地/他人提供的 tarball（无需注册表）
+npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
+```
+
+命令会在首次使用时初始化 profile、执行 pnpm，并自动激活组合层。无需启动即可验证：
+
+```bash
+npx @deepseek-ai/dsh --profile web --dump-config   # 应看到 dsh-vision-helper 层
+```
+
+然后重启 `dsh web`。
+
+**手动后备方案**（任意目录结构）：将本 `dsh-vision-helper` 文件夹复制到 `<profile>/node_modules/`，并在 `<profile>/cordis.patch.yml` 添加插件行：
 
 ```yaml
 - insert:
@@ -32,11 +49,11 @@
       name: 'dsh-vision-helper'
 ```
 
-3. 重启 `dsh web`。完成——无需解析任何依赖，模块完全自包含。
+无论哪种方式，模块都完全自包含——零依赖，无需解析。
 
 ## 配置
 
-通过设置页（**设置 → 视觉助手**）：提供方、模型、温度、最大输出 tokens、最大图片边长。等效的配置文件位于 `<profile>/node_modules/dsh-vision-helper/dsh-vision-helper.json` —— 即插件文件夹内部，卸载插件时随文件夹一并删除，无残留：
+通过设置页（**设置 → 视觉助手**）：提供方、模型、温度、最大输出 tokens、最大图片边长。等效的配置文件位于 `<profile>/dsh-vision-helper.json` —— 即宿主 profile 目录（`$DSH_HOME/profiles/web/`），用户所有、插件更新不丢失：
 
 ```json
 {
@@ -59,4 +76,4 @@
 
 ## 卸载
 
-从 `cordis.patch.yml` 移除 `dsh-vision-helper` 行，删除 `<profile>/node_modules/dsh-vision-helper` 文件夹（配置文件随文件夹一并删除），然后重启。
+执行 `npx @deepseek-ai/dsh plugin --profile web remove dsh-vision-helper` 移除依赖与组合层；再删除配置文件 `<profile>/dsh-vision-helper.json`，然后重启。手动安装则：从 `cordis.patch.yml` 移除插件行，删除 `<profile>/node_modules/dsh-vision-helper` 文件夹，然后重启。
