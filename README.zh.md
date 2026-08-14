@@ -30,6 +30,9 @@ npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
 
 # 或本地的 tarball
 npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
+
+# 维护者模式——链接到本地源码目录（改动重启即生效，无需重新安装）
+npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper
 ```
 
 命令会在首次使用时初始化 profile、执行 pnpm，并自动激活组合层。无需启动即可验证：
@@ -75,4 +78,19 @@ npx @deepseek-ai/dsh --profile web --dump-config   # 应看到 dsh-vision-helper
 
 ## 卸载
 
-执行 `npx @deepseek-ai/dsh plugin --profile web remove dsh-vision-helper` 移除依赖与组合层；再删除配置文件 `<profile>/dsh-vision-helper.json`，然后重启。手动安装则：从 `cordis.patch.yml` 移除插件行，删除 `<profile>/node_modules/dsh-vision-helper` 文件夹，然后重启。
+### 标准方式（组合包安装）
+
+```bash
+npx @deepseek-ai/dsh plugin --profile web remove dsh-vision-helper
+```
+
+该命令同时移除依赖与组合包层（插件行随之移除）。然后删除配置文件并重启 DSH：
+
+- registry/tarball 安装：`<profile>/dsh-vision-helper.json`（如 `$DSH_HOME/profiles/web/`）
+- 本地 `link:` 安装：`<repo>/dsh-vision-helper.json`（源码目录——`remove` 只删除 node_modules 链接，源码仓库原样保留）
+
+插件完全自包含，无需其他清理。
+
+### 手动方式（后备安装）
+
+从 `<profile>/cordis.patch.yml` 移除插件行，删除 `<profile>/node_modules/dsh-vision-helper`，删除配置文件，然后重启 DSH。

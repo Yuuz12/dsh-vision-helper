@@ -30,6 +30,9 @@ npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
 
 # or a tarball you built locally
 npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
+
+# maintainer mode — link to a local source checkout (changes take effect on next restart, no reinstall)
+npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper
 ```
 
 The command initializes the profile on first use, runs pnpm, and activates the bundle layer automatically. Verify without booting:
@@ -75,4 +78,19 @@ Changes are read per use — no restart needed (the guidance section re-register
 
 ## Uninstall
 
-`npx @deepseek-ai/dsh plugin --profile web remove dsh-vision-helper` removes the dependency and its bundle layer; then delete the config file `<profile>/dsh-vision-helper.json` and restart. For a manual install: remove the row from `cordis.patch.yml`, delete the `<profile>/node_modules/dsh-vision-helper` folder, then restart.
+### Standard (bundle install)
+
+```bash
+npx @deepseek-ai/dsh plugin --profile web remove dsh-vision-helper
+```
+
+This removes the dependency and its bundle layer (the plugin row goes with it). Then delete the config document and restart DSH:
+
+- registry/tarball installs: `<profile>/dsh-vision-helper.json` (e.g. `$DSH_HOME/profiles/web/`)
+- local `link:` install: `<repo>/dsh-vision-helper.json` (the source checkout — `remove` only deletes the node_modules link, the source repository is left untouched)
+
+No other cleanup is needed — the plugin is self-contained.
+
+### Manual (fallback install)
+
+Remove the plugin row from `<profile>/cordis.patch.yml`, delete `<profile>/node_modules/dsh-vision-helper`, delete the config document, then restart DSH.
