@@ -26,10 +26,9 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 The package is a DSH **bundle** (declares `dsh.bundle.patch`), so the standard install is:
 
 ```bash
-# published package (after `npm publish`)
 npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
 
-# or a tarball you built locally / received (no registry needed)
+# or a tarball you built locally
 npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
 ```
 
