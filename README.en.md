@@ -23,27 +23,27 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 
 ## Install
 
-The package is a DSH **bundle** (declares `dsh.bundle.patch`), so the standard install is:
+The package is a DSH **bundle** (declares `dsh.bundle.patch`), published on npm. Prerequisite: pnpm on the machine (Node ships corepack — run `corepack enable pnpm` to activate it).
+
+### Method 1: npm install (recommended)
 
 ```bash
 npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
-
-# or a tarball you built locally
-npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
-
-# maintainer mode — link to a local source checkout (changes take effect on next restart, no reinstall)
-npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper
 ```
 
-The command initializes the profile on first use, runs pnpm, and activates the bundle layer automatically. Verify without booting:
+Pulls the prebuilt package from the npm registry (plain JS — no prepare script, no build authorization); the bundle layer activates automatically.
+
+### Method 2: GitHub install
 
 ```bash
-npx @deepseek-ai/dsh --profile web --dump-config   # shows the dsh-vision-helper layer
+npx @deepseek-ai/dsh plugin --profile web add github:Yuuz12/dsh-vision-helper
 ```
 
-Then restart `dsh web`.
+Fetches the repository source (works directly — no build step either). Prefer Method 1 when the network to GitHub is unreliable.
 
-**Manual fallback** (any layout): copy this `dsh-vision-helper` folder into `<profile>/node_modules/` and add the row to `<profile>/cordis.patch.yml`:
+### Method 3: manual (fallback)
+
+Copy this `dsh-vision-helper` folder into `<profile>/node_modules/` and add the row to `<profile>/cordis.patch.yml`:
 
 ```yaml
 - insert:
@@ -51,7 +51,14 @@ Then restart `dsh web`.
       name: 'dsh-vision-helper'
 ```
 
-Either way the module is self-contained — zero dependencies to resolve.
+> Maintainer dev mode: `dsh plugin --profile web add ./dsh-vision-helper` (`link:` to a local source checkout) — changes take effect on next restart, no reinstall.
+
+Either way the module is self-contained — zero dependencies to resolve. Verify without booting, then restart:
+
+```bash
+npx @deepseek-ai/dsh --profile web --dump-config   # shows the dsh-vision-helper layer
+# then restart dsh web
+```
 
 ## Configuration
 

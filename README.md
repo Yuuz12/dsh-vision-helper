@@ -23,27 +23,27 @@
 
 ## 安装
 
-本包是 DSH **组合包**（声明了 `dsh.bundle.patch`），标准安装方式：
+本包是 DSH **组合包**（声明了 `dsh.bundle.patch`），已发布到 npm。前提：机器上有 pnpm（Node 自带 corepack，执行 `corepack enable pnpm` 即可启用）。
+
+### 方式一：npm 安装（推荐）
 
 ```bash
 npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
-
-# 或本地的 tarball
-npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
-
-# 维护者模式——链接到本地源码目录（改动重启即生效，无需重新安装）
-npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper
 ```
 
-命令会在首次使用时初始化 profile、执行 pnpm，并自动激活组合层。无需启动即可验证：
+从 npm registry 拉取预构建代码（纯 JS 包，无 prepare 脚本、无需构建授权），自动激活组合层。
+
+### 方式二：GitHub 安装
 
 ```bash
-npx @deepseek-ai/dsh --profile web --dump-config   # 应看到 dsh-vision-helper 层
+npx @deepseek-ai/dsh plugin --profile web add github:Yuuz12/dsh-vision-helper
 ```
 
-然后重启 `dsh web`。
+拉取仓库源码（同样直接可用，无需构建步骤）；网络不佳时优先用方式一。
 
-**手动后备方案**（任意目录结构）：将本 `dsh-vision-helper` 文件夹复制到 `<profile>/node_modules/`，并在 `<profile>/cordis.patch.yml` 添加插件行：
+### 方式三：手动（备用）
+
+将本 `dsh-vision-helper` 文件夹复制到 `<profile>/node_modules/`，并在 `<profile>/cordis.patch.yml` 添加插件行：
 
 ```yaml
 - insert:
@@ -51,7 +51,14 @@ npx @deepseek-ai/dsh --profile web --dump-config   # 应看到 dsh-vision-helper
       name: 'dsh-vision-helper'
 ```
 
-无论哪种方式，模块都完全自包含——零依赖，无需解析。
+> 维护者开发模式：`dsh plugin --profile web add ./dsh-vision-helper`（`link:` 链接本地源码目录），改动重启即生效，无需重新安装。
+
+无论哪种方式，模块都完全自包含——零依赖，无需解析。安装后验证并重启：
+
+```bash
+npx @deepseek-ai/dsh --profile web --dump-config   # 应看到 dsh-vision-helper 层
+# 然后重启 dsh web
+```
 
 ## 配置
 
