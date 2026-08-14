@@ -19,17 +19,16 @@
 ## 环境要求（使用者侧）
 
 - DSH Web 部署（设置页仅 Web 端；工具本身在挂载了该插件的任何 profile 中均可用）。
-- 在部署的 `llm-pi-ai` 设置（「模型」设置页）中配置好**多模态模型路由**——例如 `mimo-v2.5`，或你添加的任意 OpenAI 兼容视觉端点。插件不携带任何 API Key。
+- 在部署的 `llm-pi-ai` 设置（「模型」设置页）中配置好**多模态模型路由**，或你添加的任意 OpenAI 兼容视觉端点。插件不携带任何 API Key。
 
 ## 安装
 
 本包是 DSH **组合包**（声明了 `dsh.bundle.patch`），标准安装方式：
 
 ```bash
-# 已发布到 npm 后
 npx @deepseek-ai/dsh plugin --profile web add dsh-vision-helper
 
-# 或本地/他人提供的 tarball（无需注册表）
+# 或本地的 tarball
 npx @deepseek-ai/dsh plugin --profile web add ./dsh-vision-helper-0.4.0.tgz
 ```
 
