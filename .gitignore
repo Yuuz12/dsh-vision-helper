@@ -1,0 +1,10 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+
+# Local artifacts
+*.tgz
+
+# User config (lives in the profile dir by design, never committed)
+dsh-vision-helper.json
