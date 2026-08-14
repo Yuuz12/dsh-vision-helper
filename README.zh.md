@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 打造的部署级视觉插件。
+为 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) 打造的持久化视觉插件。
 
 注册 `vision_analyze` 工具，让智能体通过**任意可配置的多模态模型**分析图片（OCR、UI/报错截图、图表理解、通用图片描述），并在 Web 应用中提供设置页界面。
 
@@ -14,7 +14,7 @@
 - **可配置模型** —— 在「设置 → 视觉助手」中选择提供方与模型（或直接编辑插件目录下的 `dsh-vision-helper.json`）；留空自动选择多模态模型。
 - **健壮性** —— 自动剥离粘贴路径中的不可见 Unicode 字符（U+202A 等）；按最长边限制图片尺寸（`maxEdge`，默认 4096px）；去重流式文本；友好的错误提示。
 - **自动调用引导** —— 注入系统提示段，让智能体在涉及图片的任务中自动调用 `vision_analyze`。
-- **持久且全局** —— 宿主组合插件：重启不丢失，所有会话可用。
+- **持久化且全局** —— 宿主组合插件：重启不丢失，所有会话可用。
 
 ## 环境要求（使用者侧）
 

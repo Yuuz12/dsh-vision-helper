@@ -1,5 +1,5 @@
 /**
- * dsh-vision-helper — deployment-level vision plugin for DeepSeek Harness.
+ * dsh-vision-helper — persistent vision plugin for DeepSeek Harness.
  *
  * Zero-dependency by design: no imports, so installation is a plain folder
  * copy plus one cordis.patch.yml row. Configuration lives in the plugin's own

@@ -34,5 +34,5 @@
       ]
     }
   },
-  "description": "Deployment-level vision plugin for DeepSeek Harness: registers the vision_analyze tool backed by a configurable multimodal model, with a settings-page UI. Zero dependencies."
+  "description": "Persistent vision plugin for DeepSeek Harness: registers the vision_analyze tool backed by a configurable multimodal model, with a settings-page UI. Zero dependencies."
 }

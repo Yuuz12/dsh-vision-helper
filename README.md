@@ -2,7 +2,7 @@
 
 English | [中文](README.zh.md)
 
-Deployment-level vision plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
+Persistent vision plugin for [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness).
 
 Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error screenshots, charts, general image description) through **any configurable multimodal model**, plus a settings-page UI in the Web app.
 
@@ -14,7 +14,7 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 - **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in the plugin's `dsh-vision-helper.json`); empty fields auto-select a multimodal model.
 - **Robustness** — strips invisible Unicode characters from pasted paths (U+202A etc.), guards images by longest edge (`maxEdge`, default 4096 px), dedupes streamed text, friendly error messages.
 - **Automatic invocation guidance** — injects a system-prompt section so agents call `vision_analyze` on their own when a task involves images.
-- **Durable & global** — host composition plugin: survives restarts, available to every session.
+- **Persistent & global** — host composition plugin: survives restarts, available to every session.
 
 ## Requirements (recipient side)
 
