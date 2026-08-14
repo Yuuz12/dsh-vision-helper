@@ -11,7 +11,7 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 ## Features
 
 - **`vision_analyze` tool** — accepts a local image path or a `data:` URI, sends it to the configured multimodal model, returns the analysis text.
-- **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in `$DSH_HOME/dsh-vision-helper.json`); empty fields auto-select a multimodal model.
+- **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in the plugin's `dsh-vision-helper.json`); empty fields auto-select a multimodal model.
 - **Robustness** — strips invisible Unicode characters from pasted paths (U+202A etc.), guards images by longest edge (`maxEdge`, default 4096 px), dedupes streamed text, friendly error messages.
 - **Automatic invocation guidance** — injects a system-prompt section so agents call `vision_analyze` on their own when a task involves images.
 - **Durable & global** — host composition plugin: survives restarts, available to every session.
@@ -36,7 +36,7 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 
 ## Configuration
 
-Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `$DSH_HOME/dsh-vision-helper.json` (beside `settings.yaml`):
+Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `<profile>/node_modules/dsh-vision-helper/dsh-vision-helper.json` — inside the plugin folder, so uninstalling the plugin removes it with no residue:
 
 ```json
 {
@@ -59,4 +59,4 @@ Changes are read per use — no restart needed (the guidance section re-register
 
 ## Uninstall
 
-Remove the `dsh-vision-helper` row from `cordis.patch.yml`, delete the `<profile>/node_modules/dsh-vision-helper` folder and `$DSH_HOME/dsh-vision-helper.json`, then restart.
+Remove the `dsh-vision-helper` row from `cordis.patch.yml`, delete the `<profile>/node_modules/dsh-vision-helper` folder (which also removes the config file), then restart.

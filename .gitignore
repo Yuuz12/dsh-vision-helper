@@ -5,3 +5,6 @@ Thumbs.db
 
 # Local artifacts
 *.tgz
+
+# User config (machine-specific; lives in the plugin folder by design)
+dsh-vision-helper.json
