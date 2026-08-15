@@ -11,7 +11,7 @@
 ## 功能特性
 
 - **`vision_analyze` 工具** —— 接受本地图片路径或 `data:` URI，发送给配置的多模态模型，返回分析文字。
-- **可配置模型** —— 在「设置 → 视觉助手」中选择提供方与模型（或直接编辑插件目录下的 `dsh-vision-helper.json`）；留空自动选择多模态模型。
+- **可配置模型** —— 在「设置 → 视觉助手」中选择提供方与模型（或直接编辑数据目录下的 `dsh-vision-helper.json`，位置见「配置」节）；留空自动选择多模态模型。
 - **健壮性** —— 自动剥离粘贴路径中的不可见 Unicode 字符（U+202A 等）；按最长边限制图片尺寸（`maxEdge`，默认 4096px）；去重流式文本；友好的错误提示。
 - **自动调用引导** —— 注入系统提示段，让智能体在涉及图片的任务中自动调用 `vision_analyze`。
 - **持久化且全局** —— 宿主组合插件：重启不丢失，所有会话可用。
@@ -62,7 +62,12 @@ npx @deepseek-ai/dsh --profile web --dump-config   # 应看到 dsh-vision-helper
 
 ## 配置
 
-通过设置页（**设置 → 视觉助手**）：提供方、模型、温度、最大输出 tokens、最大图片边长。等效的配置文件位于 `<profile>/dsh-vision-helper.json` —— 即宿主 profile 目录（`$DSH_HOME/profiles/web/`），用户所有、插件更新不丢失：
+通过设置页（**设置 → 视觉助手**）：提供方、模型、温度、最大输出 tokens、最大图片边长。等效的配置文件位于**数据目录**的 `dsh-vision-helper.json`，随安装方式不同：
+
+- **registry / tarball / GitHub 安装**：宿主 profile 目录 `<profile>/dsh-vision-helper.json`（如 `$DSH_HOME/profiles/web/`）——用户所有、插件更新不丢失；
+- **本地 `link:` 安装**（维护者）：回退到插件源码目录 `<repo>/dsh-vision-helper.json`（模块路径不含 `/profiles/` 标记时）。
+
+插件按模块路径中的 `/profiles/` 标记自动判定，无需配置：
 
 ```json
 {

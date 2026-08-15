@@ -11,7 +11,7 @@ Registers the `vision_analyze` tool so agents can analyze images (OCR, UI/error 
 ## Features
 
 - **`vision_analyze` tool** — accepts a local image path or a `data:` URI, sends it to the configured multimodal model, returns the analysis text.
-- **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in the plugin's `dsh-vision-helper.json`); empty fields auto-select a multimodal model.
+- **Configurable model** — provider + model picked in **设置 → 视觉助手** (or directly in the data-directory `dsh-vision-helper.json`, see "Configuration"); empty fields auto-select a multimodal model.
 - **Robustness** — strips invisible Unicode characters from pasted paths (U+202A etc.), guards images by longest edge (`maxEdge`, default 4096 px), dedupes streamed text, friendly error messages.
 - **Automatic invocation guidance** — injects a system-prompt section so agents call `vision_analyze` on their own when a task involves images.
 - **Persistent & global** — host composition plugin: survives restarts, available to every session.
@@ -62,7 +62,12 @@ npx @deepseek-ai/dsh --profile web --dump-config   # shows the dsh-vision-helper
 
 ## Configuration
 
-Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. Equivalent config document at `<profile>/dsh-vision-helper.json` — the hosting profile directory (`$DSH_HOME/profiles/web/`), user-owned and stable across plugin updates:
+Via the settings page (**设置 → 视觉助手**): provider, model, temperature, max output tokens, max image edge. The equivalent config document `dsh-vision-helper.json` lives in the **data directory**, which depends on the install mode:
+
+- **registry / tarball / GitHub installs**: the hosting profile directory `<profile>/dsh-vision-helper.json` (e.g. `$DSH_HOME/profiles/web/`) — user-owned and stable across plugin updates;
+- **local `link:` installs** (maintainers): falls back to the plugin source checkout `<repo>/dsh-vision-helper.json` (when the module path carries no `/profiles/` marker).
+
+The plugin detects the location automatically from the `/profiles/` marker in its module path:
 
 ```json
 {

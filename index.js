@@ -190,11 +190,14 @@ export async function apply(ctx) {
   // auto = soft guidance, force = mandatory instruction. Re-registered on
   // every config write so a mode change applies without a restart.
   let guidanceDispose = null
-  function refreshGuidance(mode) {
+  function disposeGuidance() {
     if (guidanceDispose) {
       guidanceDispose()
       guidanceDispose = null
     }
+  }
+  function refreshGuidance(mode) {
+    disposeGuidance()
     if (mode === 'off') return
     guidanceDispose = ctx.systemPrompt.section({
       name: 'vision-guidance',
@@ -203,6 +206,8 @@ export async function apply(ctx) {
     })
   }
   refreshGuidance((await readConfig(ctx)).mode)
+  // 卸载/热重载时清理引导段（热重载本身由 disposeGuidance 处理）
+  ctx.effect(() => () => disposeGuidance(), 'dsh-vision-helper: guidance cleanup')
 
   async function listProvidersState() {
     const out = []
@@ -244,7 +249,11 @@ export async function apply(ctx) {
   // Profile-dir dsh-vision-helper.json — the same document the tool consumes.
   function sendJson(res, status, body) {
     const text = JSON.stringify(body)
-    res.writeHead(status, { 'content-type': 'application/json; charset=utf-8' })
+    res.writeHead(status, {
+      'content-type': 'application/json; charset=utf-8',
+      'x-content-type-options': 'nosniff',
+      'cache-control': 'no-store',
+    })
     res.end(text)
   }
 
@@ -257,7 +266,7 @@ export async function apply(ctx) {
     })
   }
 
-  ctx.webServer.register({
+  ctx.effect(() => ctx.webServer.register({
     kind: 'exact',
     path: '/dsh-vision-helper/config',
     handler: async (req, res) => {
@@ -312,9 +321,9 @@ export async function apply(ctx) {
         sendJson(res, 400, { error: e && e.message ? e.message : String(e) })
       }
     },
-  })
+  }), 'dsh-vision-helper: config endpoint')
 
-  ctx.tools.register({
+  ctx.effect(() => ctx.tools.register({
     name: 'vision_analyze',
     description: '使用已配置的多模态视觉模型分析图片并返回文字结果。适用于识别图片内容与场景、读取截图/文档中的文字（OCR）、理解图表/UI/报错截图、描述图像细节。image 参数接受本地图片的绝对路径（推荐）或 data:image/...;base64,... 数据 URI；分析网络图片前请先用其他工具下载到本地。配置在 profile 目录下的 dsh-vision-helper.json：provider/model 留空自动选择多模态模型，maxEdge 限制最长边像素（默认 4096）。',
     parameters: {
@@ -426,5 +435,5 @@ export async function apply(ctx) {
       if (!result) throw new Error('视觉模型未返回任何文字内容。可能原因：所选模型不支持图片输入、图片过长，或模型拒绝了该请求。请在「设置 → 视觉助手」更换 model 或调高 maxEdge 后重试。')
       return result
     },
-  })
+  }), 'dsh-vision-helper: vision tool')
 }
